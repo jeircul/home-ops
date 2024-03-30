@@ -1,0 +1,19 @@
+---
+kubernetes:
+  children:
+    controllers:
+      hosts:
+        "node1":
+          ansible_user: "jeircul"
+          ansible_host: "192.168.0.30"
+    workers:
+      hosts:
+        "node2":
+          ansible_user: "jeircul"
+          ansible_host: "192.168.0.31"
+        "node3":
+          ansible_user: "jeircul"
+          ansible_host: "192.168.0.32"
+        "node4":
+          ansible_user: "jeircul"
+          ansible_host: "192.168.0.33"
