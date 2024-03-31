@@ -43,7 +43,7 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: /admin
+                    # path: /admin
                     port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
@@ -83,7 +83,7 @@ spec:
         endpoints:
           - port: http
             scheme: http
-            path: /admin
+            # path: /admin
             interval: 1m
             scrapeTimeout: 10s
           - port: udp
