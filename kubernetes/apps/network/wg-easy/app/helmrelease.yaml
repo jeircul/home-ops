@@ -85,11 +85,9 @@ spec:
             interval: 1m
             scrapeTimeout: 10s
           - port: 51821
-            scheme: http
             interval: 1m
             scrapeTimeout: 10s
           - port: 51820
-            scheme: udp
             interval: 1m
             scrapeTimeout: 10s
     ingress:
