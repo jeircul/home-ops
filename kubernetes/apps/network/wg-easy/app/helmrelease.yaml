@@ -23,13 +23,15 @@ spec:
   values:
     controllers:
       wg-easy:
-        strategy: RollingUpdate
+        strategy: Recreate
+
         containers:
-          app:
+          wg-easy:
             image:
               repository: ghcr.io/wg-easy/wg-easy
               tag: 12
-            # Specify external hostname and port as environment variables
+              # Specify external hostname and port as environment variables
+              pullPolicy: IfNotPresent
             env:
               WG_HOST: "${SECRET_DNS}"
               WG_PORT: "30000"
@@ -54,49 +56,50 @@ spec:
             # volumeMounts:
             #   - mountPath: /etc/wireguard
             #     name: config
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    # path: /admin
-                    port: 51821
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
-            resources:
-              requests:
-                cpu: 10m
-              limits:
-                memory: 64Mi
+            # probes:
+            #   liveness: &probes
+            #     enabled: true
+            #     custom: true
+            #     spec:
+            #       httpGet:
+            #         # path: /admin
+            #         port: 51821
+            #       initialDelaySeconds: 0
+            #       periodSeconds: 10
+            #       timeoutSeconds: 1
+            #       failureThreshold: 3
+            #   readiness: *probes
+            # resources:
+            #   requests:
+            #     cpu: 10m
+            #   limits:
+            #     memory: 64Mi
+
     service:
-      app:
+      wg-easy:
         controller: wg-easy
         ports:
           http:
-            port: *port
+            port: 51821
             protocol: TCP
           wg:
             port: 51820
             protocol: UDP
-    serviceMonitor:
-      app:
-        serviceName: wg-easy
-        endpoints:
-          - port: http
-            interval: 1m
-            scrapeTimeout: 10s
-          - port: wg
-            interval: 1m
-            scrapeTimeout: 10s
+    # serviceMonitor:
+    #   app:
+    #     serviceName: wg-easy
+    #     endpoints:
+    #       - port: http
+    #         interval: 1m
+    #         scrapeTimeout: 10s
+    #       - port: wg
+    #         interval: 1m
+    #         scrapeTimeout: 10s
     ingress:
-      app:
+      wg-easy:
         className: internal
-        annotations:
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+        # annotations:
+        #   external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
@@ -107,3 +110,11 @@ spec:
         tls:
           - hosts:
               - *host
+    # -- Configure persistence settings for the chart under this key.
+    persistence:
+      config:
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        size: 100Mi
+        globalMounts:
+          - path: /config
