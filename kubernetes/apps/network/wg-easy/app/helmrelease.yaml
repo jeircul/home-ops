@@ -31,19 +31,25 @@ spec:
               tag: 12
             env:
               WG_HOST: "${SECRET_DDNS}"
-              PORT: &port 51821
-              WG_PORT: 51820
+              WG_PORT: 3000
               WG_DEFAULT_DNS: 192.168.0.4, 192.168.0.5
               PASSWORD: "${SECRET_WG_EASY_PASSWORD}"
               UI_TRAFFIC_STATS: true
               PROMETHEUS_ENABLED: true
+            ports:
+              - containerPort: 51820
+                name: wg
+                protocol: UDP
+              - containerPort: &port 51821
+                name: http
+                protocol: TCP
             probes:
               liveness: &probes
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
-                    # path: /admin
+                    path: /admin
                     port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
@@ -73,20 +79,20 @@ spec:
       app:
         controller: wg-easy
         ports:
+          wg:
+            port: 51820
+            protocol: UDP
           http:
             port: *port
-          udp:
-            port: 51820
+            protocol: TCP
     serviceMonitor:
       app:
         serviceName: wg-easy
         endpoints:
           - port: http
-            scheme: http
-            # path: /admin
             interval: 1m
             scrapeTimeout: 10s
-          - port: udp
+          - port: wg
             interval: 1m
             scrapeTimeout: 10s
     ingress:
