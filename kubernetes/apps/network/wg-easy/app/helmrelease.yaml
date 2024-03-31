@@ -75,6 +75,8 @@ spec:
         ports:
           http:
             port: *port
+          udp:
+            port: 51820
     serviceMonitor:
       app:
         serviceName: wg-easy
@@ -84,10 +86,7 @@ spec:
             path: /admin
             interval: 1m
             scrapeTimeout: 10s
-          - port: 51821
-            interval: 1m
-            scrapeTimeout: 10s
-          - port: 51820
+          - port: udp
             interval: 1m
             scrapeTimeout: 10s
     ingress:
