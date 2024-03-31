@@ -25,17 +25,23 @@ spec:
       wg-easy:
         strategy: RollingUpdate
         containers:
-          app:
-            image:
-              repository: ghcr.io/wg-easy/wg-easy
-              tag: 12
+          - name: wg-easy
+            # Specify external hostname and port as environment variables
             env:
-              WG_HOST: "${SECRET_DDNS}"
-              WG_PORT: 3000
-              WG_DEFAULT_DNS: 192.168.0.4, 192.168.0.5
-              PASSWORD: "${SECRET_WG_EASY_PASSWORD}"
-              UI_TRAFFIC_STATS: true
-              PROMETHEUS_ENABLED: true
+              - name: WG_HOST
+                value: "${SECRET_DNS}"
+              - name: WG_PORT
+                value: "30000"
+              - name: WG_DEFAULT_DNS
+                value: "192.168.0.4, 192.168.0.5"
+              - name: PASSWORD
+                value: "${SECRET_WG_EASY_PASSWORD}"
+              - name: UI_TRAFFIC_STATS
+                value: true
+              - name: PROMETHEUS_ENABLED
+                value: true
+            image: ghcr.io/wg-easy/wg-easy
+            imagePullPolicy: IfNotPresent
             ports:
               - containerPort: 51820
                 name: wg
@@ -43,38 +49,56 @@ spec:
               - containerPort: &port 51821
                 name: http
                 protocol: TCP
+            # Use the http server for pod health checks
+            livenessProbe:
+              failureThreshold: 3
+              periodSeconds: 10
+              successThreshold: 1
+              tcpSocket:
+                port: http
+              timeoutSeconds: 1
+            readinessProbe:
+              failureThreshold: 3
+              periodSeconds: 10
+              successThreshold: 1
+              tcpSocket:
+                port: http
+              timeoutSeconds: 1
+            startupProbe:
+              failureThreshold: 30
+              periodSeconds: 5
+              successThreshold: 1
+              tcpSocket:
+                port: http
+              timeoutSeconds: 1
+            # Give pod permissions to modify iptables and load the wireguard kernel module
+            securityContext:
+              capabilities:
+                add:
+                  - NET_ADMIN
+                  - SYS_MODULE
+            # Persistent storage location
+            volumeMounts:
+              - mountPath: /etc/wireguard
+                name: config
             probes:
               liveness: &probes
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
-                    path: /admin
-                    port: *port
+                    # path: /admin
+                    port: 51821
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
-            securityContext:
-              allowPrivilegeEscalation: true
-              readOnlyRootFilesystem: false
-              capabilities:
-                add:
-                  - NET_ADMIN
-                  - SYS_MODULE
-              seccompProfile:
-                type: RuntimeDefault
             resources:
               requests:
                 cpu: 10m
               limits:
                 memory: 64Mi
-        pod:
-          securityContext:
-            runAsUser: 65534
-            runAsGroup: 65534
-            runAsNonRoot: true
     service:
       app:
         controller: wg-easy
