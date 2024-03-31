@@ -51,9 +51,9 @@ spec:
                   - NET_ADMIN
                   - SYS_MODULE
             # Persistent storage location
-            volumeMounts:
-              - mountPath: /etc/wireguard
-                name: config
+            # volumeMounts:
+            #   - mountPath: /etc/wireguard
+            #     name: config
             probes:
               liveness: &probes
                 enabled: true
