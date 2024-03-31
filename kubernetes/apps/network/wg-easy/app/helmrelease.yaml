@@ -22,7 +22,7 @@ spec:
       retries: 3
   values:
     controllers:
-      echo-server:
+      wg-easy:
         strategy: RollingUpdate
         containers:
           app:
