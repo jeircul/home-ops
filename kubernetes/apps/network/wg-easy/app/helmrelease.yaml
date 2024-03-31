@@ -105,7 +105,7 @@ spec:
             paths:
               - path: /
                 service:
-                  identifier: app
+                  identifier: wg-easy
                   port: http
         tls:
           - hosts:
