@@ -31,6 +31,8 @@ spec:
               tag: 12
             env:
               WG_HOST: "${SECRET_DDNS}"
+              PORT: &port 51821
+              WG_PORT: 51820
               WG_DEFAULT_DNS: 192.168.0.4, 192.168.0.5
               PASSWORD: "${SECRET_WG_EASY_PASSWORD}"
               UI_TRAFFIC_STATS: true
@@ -42,17 +44,16 @@ spec:
                 spec:
                   httpGet:
                     path: /admin
-                    port: &port 51821
+                    port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
             securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: true
+              readOnlyRootFilesystem: false
               capabilities:
-                drop: ["ALL"]
                 add:
                   - NET_ADMIN
                   - SYS_MODULE
@@ -81,6 +82,14 @@ spec:
           - port: http
             scheme: http
             path: /admin
+            interval: 1m
+            scrapeTimeout: 10s
+          - port: 51821
+            scheme: http
+            interval: 1m
+            scrapeTimeout: 10s
+          - port: 51820
+            scheme: udp
             interval: 1m
             scrapeTimeout: 10s
     ingress:
