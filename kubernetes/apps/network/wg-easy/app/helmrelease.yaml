@@ -25,23 +25,17 @@ spec:
       wg-easy:
         strategy: RollingUpdate
         containers:
-          - name: wg-easy
+          app:
+            image:
+            repository: ghcr.io/wg-easy/wg-easy
             # Specify external hostname and port as environment variables
             env:
-              - name: WG_HOST
-                value: "${SECRET_DNS}"
-              - name: WG_PORT
-                value: "30000"
-              - name: WG_DEFAULT_DNS
-                value: "192.168.0.4, 192.168.0.5"
-              - name: PASSWORD
-                value: "${SECRET_WG_EASY_PASSWORD}"
-              - name: UI_TRAFFIC_STATS
-                value: true
-              - name: PROMETHEUS_ENABLED
-                value: true
-            image: ghcr.io/wg-easy/wg-easy
-            imagePullPolicy: IfNotPresent
+              WG_HOST: "${SECRET_DNS}"
+              WG_PORT: "30000"
+              WG_DEFAULT_DNS: "192.168.0.4, 192.168.0.5"
+              PASSWORD: "${SECRET_WG_EASY_PASSWORD}"
+              UI_TRAFFIC_STATS: true
+              PROMETHEUS_ENABLED: true
             ports:
               - containerPort: 51820
                 name: wg
@@ -49,28 +43,6 @@ spec:
               - containerPort: &port 51821
                 name: http
                 protocol: TCP
-            # Use the http server for pod health checks
-            livenessProbe:
-              failureThreshold: 3
-              periodSeconds: 10
-              successThreshold: 1
-              tcpSocket:
-                port: http
-              timeoutSeconds: 1
-            readinessProbe:
-              failureThreshold: 3
-              periodSeconds: 10
-              successThreshold: 1
-              tcpSocket:
-                port: http
-              timeoutSeconds: 1
-            startupProbe:
-              failureThreshold: 30
-              periodSeconds: 5
-              successThreshold: 1
-              tcpSocket:
-                port: http
-              timeoutSeconds: 1
             # Give pod permissions to modify iptables and load the wireguard kernel module
             securityContext:
               capabilities:
@@ -103,12 +75,12 @@ spec:
       app:
         controller: wg-easy
         ports:
-          wg:
-            port: 51820
-            protocol: UDP
           http:
             port: *port
             protocol: TCP
+          wg:
+            port: 51820
+            protocol: UDP
     serviceMonitor:
       app:
         serviceName: wg-easy
