@@ -41,7 +41,7 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: /healthz
+                    path: /admin
                     port: &port 51821
                   initialDelaySeconds: 0
                   periodSeconds: 10
