@@ -51,8 +51,8 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              # capabilities: { drop: ["ALL"] }
               capabilities:
+                drop: ["ALL"]
                 add:
                   - NET_ADMIN
                   - SYS_MODULE
@@ -80,7 +80,7 @@ spec:
         endpoints:
           - port: http
             scheme: http
-            path: /metrics
+            path: /admin
             interval: 1m
             scrapeTimeout: 10s
     ingress:
