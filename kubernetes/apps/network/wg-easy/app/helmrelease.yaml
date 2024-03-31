@@ -113,8 +113,6 @@ spec:
     # -- Configure persistence settings for the chart under this key.
     persistence:
       config:
-        type: persistentVolumeClaim
-        accessMode: ReadWriteOnce
-        size: 100Mi
+        existingClaim: wg-easy-storage-claim
         globalMounts:
-          - path: /config
+          - path: /etc/wireguard
