@@ -43,7 +43,7 @@ spec:
                 spec:
                   httpGet:
                     path: /
-                    port: *port
+                    port: &port 51821
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
@@ -69,7 +69,7 @@ spec:
         controller: wg-easy
         ports:
           http:
-            port: 51821
+            port: *port
             protocol: TCP
           wg:
             port: 51820
