@@ -99,7 +99,7 @@ spec:
           - hosts:
               - *host
     persistence:
-      data:
+      config:
         enabled: true
         existingClaim: wg-easy-claim
         globalMounts:
