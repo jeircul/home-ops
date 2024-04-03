@@ -79,15 +79,15 @@ spec:
           wg:
             port: 51820
             protocol: UDP
-    serviceMonitor:
-      app:
-        serviceName: wg-easy
-        endpoints:
-          - port: http
-            scheme: http
-            path: /
-            interval: 1m
-            scrapeTimeout: 10s
+    # serviceMonitor:
+    #   app:
+    #     serviceName: wg-easy
+    #     endpoints:
+    #       - port: http
+    #         scheme: http
+    #         path: /
+    #         interval: 1m
+    #         scrapeTimeout: 10s
     ingress:
       app:
         className: internal
