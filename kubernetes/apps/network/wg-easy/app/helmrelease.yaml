@@ -36,40 +36,45 @@ spec:
               PASSWORD: "${SECRET_WG_EASY_PASSWORD}"
               UI_TRAFFIC_STATS: true
               PROMETHEUS_ENABLED: true
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /
-                    port: &port 51821
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
+            # probes:
+            #   liveness: &probes
+            #     enabled: true
+            #     custom: true
+            #     spec:
+            #       httpGet:
+            #         path: /
+            #         port: &port 51821
+            #       initialDelaySeconds: 0
+            #       periodSeconds: 10
+            #       timeoutSeconds: 1
+            #       failureThreshold: 3
+            #   readiness: *probes
             securityContext:
+              sysctls:
+                - name: net.ipv4.conf.all.src_valid_mark
+                  value: 1
+                - name: net.ipv4.ip_forward
+                  value: 1
               capabilities:
                 add:
                   - NET_ADMIN
                   - SYS_MODULE
-            resources:
-              requests:
-                cpu: 10m
-              limits:
-                memory: 256Mi
-        pod:
-          securityContext:
-            runAsUser: 65534
-            runAsGroup: 65534
-            runAsNonRoot: true
+            # resources:
+            #   requests:
+            #     cpu: 10m
+            #   limits:
+            #     memory: 256Mi
+        # pod:
+        #   securityContext:
+        #     runAsUser: 65534
+        #     runAsGroup: 65534
+        #     runAsNonRoot: true
     service:
       app:
         controller: wg-easy
         ports:
           http:
-            port: *port
+            port: 51821
             protocol: TCP
           wg:
             port: 51820
@@ -80,14 +85,14 @@ spec:
         endpoints:
           - port: http
             scheme: http
-            path: /metrics
+            path: /
             interval: 1m
             scrapeTimeout: 10s
     ingress:
       app:
         className: internal
-        annotations:
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+        # annotations:
+        #   external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:

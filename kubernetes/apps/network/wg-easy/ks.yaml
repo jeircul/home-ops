@@ -9,6 +9,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: external-dns
   path: ./kubernetes/apps/network/wg-easy/app
   prune: true
   sourceRef:
