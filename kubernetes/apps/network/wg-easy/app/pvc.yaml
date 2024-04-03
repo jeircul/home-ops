@@ -3,7 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: wg-easy-claim
-  namespace: default
+  namespace: network
 spec:
   accessModes:
     - ReadWriteMany
