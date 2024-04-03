@@ -21,6 +21,8 @@ spec:
     remediation:
       retries: 3
   values:
+    global:
+      nameOverride: wg-easy
     controllers:
       wg-easy:
         strategy: Recreate
