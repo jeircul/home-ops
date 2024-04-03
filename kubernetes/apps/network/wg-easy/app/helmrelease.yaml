@@ -37,19 +37,19 @@ spec:
             envFrom:
               - secretRef:
                   name: wg-easy-secrets
-            # probes:
-            #   liveness: &probes
-            #     enabled: true
-            #     custom: true
-            #     spec:
-            #       httpGet:
-            #         path: /
-            #         port: &port 51821
-            #       initialDelaySeconds: 0
-            #       periodSeconds: 10
-            #       timeoutSeconds: 1
-            #       failureThreshold: 3
-            #   readiness: *probes
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 51821
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
             securityContext:
               sysctls:
                 - name: net.ipv4.conf.all.src_valid_mark
@@ -60,11 +60,11 @@ spec:
                 add:
                   - NET_ADMIN
                   - SYS_MODULE
-            # resources:
-            #   requests:
-            #     cpu: 10m
-            #   limits:
-            #     memory: 256Mi
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 256Mi
         # pod:
         #   securityContext:
         #     runAsUser: 65534
@@ -80,15 +80,15 @@ spec:
           wg:
             port: 51820
             protocol: UDP
-    # serviceMonitor:
-    #   app:
-    #     serviceName: wg-easy
-    #     endpoints:
-    #       - port: http
-    #         scheme: http
-    #         path: /
-    #         interval: 1m
-    #         scrapeTimeout: 10s
+    serviceMonitor:
+      app:
+        serviceName: wg-easy
+        endpoints:
+          - port: http
+            scheme: http
+            path: /
+            interval: 1m
+            scrapeTimeout: 10s
     ingress:
       app:
         className: internal
