@@ -73,6 +73,7 @@ spec:
     service:
       app:
         controller: wg-easy
+        type: LoadBalancer
         ports:
           http:
             port: 51821
