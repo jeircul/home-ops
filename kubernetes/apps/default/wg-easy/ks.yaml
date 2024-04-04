@@ -5,13 +5,13 @@ metadata:
   name: &app wg-easy
   namespace: flux-system
 spec:
-  targetNamespace: network
+  targetNamespace: default
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: external-dns
-  path: ./kubernetes/apps/network/wg-easy/app
+  path: ./kubernetes/apps/default/wg-easy/app
   prune: true
   sourceRef:
     kind: GitRepository
