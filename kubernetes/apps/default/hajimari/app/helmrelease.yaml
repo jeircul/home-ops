@@ -61,6 +61,7 @@ spec:
       configmap.reloader.stakater.com/reload: hajimari-settings
     persistence:
       data:
+        existingClaim: hajimari-claim
         enabled: true
         type: emptyDir
     resources:
