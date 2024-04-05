@@ -29,9 +29,9 @@ spec:
     keepHistory: false
   dependsOn:
     - name: ingress-nginx
-      namespace: networking
-    - name: redis
-      namespace: database
+      namespace: network
+    # - name: redis
+    #   namespace: database
   values:
     controllers:
       ghostfolio:
