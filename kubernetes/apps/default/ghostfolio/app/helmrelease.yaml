@@ -27,8 +27,8 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
-  # dependsOn:
-    # - name: ingress-nginx-internal
+  dependsOn:
+    # - name: ingress-nginx
     #   namespace: network
     # - name: redis
     #   namespace: database
@@ -75,7 +75,7 @@ spec:
         enabled: true
         className: "nginx"
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_CLUSTER_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
