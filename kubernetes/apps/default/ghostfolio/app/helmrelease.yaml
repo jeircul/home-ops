@@ -30,8 +30,8 @@ spec:
   dependsOn:
     # - name: ingress-nginx
     #   namespace: network
-    # - name: redis
-    #   namespace: database
+    - name: redis
+      namespace: database
   values:
     controllers:
       ghostfolio:
@@ -73,7 +73,7 @@ spec:
     ingress:
       app:
         enabled: true
-        className: "nginx"
+        className: internal
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
