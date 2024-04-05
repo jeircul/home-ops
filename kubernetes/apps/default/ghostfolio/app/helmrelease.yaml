@@ -27,11 +27,11 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
-  dependsOn:
-    # - name: ingress-nginx
-    #   namespace: network
-    - name: redis
-      namespace: database
+  # dependsOn:
+  #   - name: ingress-nginx
+  #     namespace: network
+  #   - name: redis
+  #     namespace: database
   values:
     controllers:
       ghostfolio:
