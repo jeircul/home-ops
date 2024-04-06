@@ -57,6 +57,8 @@ spec:
                 - name: net.ipv4.ip_forward
                   value: 1
               capabilities:
+                drop:
+                  - ALL
                 add:
                   - NET_ADMIN
                   - SYS_MODULE
