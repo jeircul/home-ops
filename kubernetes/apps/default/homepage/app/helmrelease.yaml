@@ -47,6 +47,7 @@ spec:
                 memory: 1G
     service:
       main:
+        type: LoadBalancer
         ports:
           http:
             port: 3000
