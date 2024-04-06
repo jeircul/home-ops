@@ -58,6 +58,7 @@ spec:
     persistence:
       data:
         enabled: true
+        existingClaim: hajimari-claim
         type: emptyDir
     resources:
       requests:
