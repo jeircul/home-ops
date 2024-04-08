@@ -5,9 +5,12 @@ resources:
   - ./bjw-s.yaml
   - ./cilium.yaml
   - ./external-dns.yaml
+  - ./grafana.yaml
+  - ./hajimari.yaml
   - ./ingress-nginx.yaml
-  - ./k8s-gateway.yaml
   - ./jetstack.yaml
+  - ./k8s-gateway.yaml
+  - ./longhorn.yaml
   - ./metrics-server.yaml
   - ./openebs.yaml
   - ./stakater.yaml
