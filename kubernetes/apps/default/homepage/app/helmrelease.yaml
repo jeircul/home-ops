@@ -51,6 +51,7 @@ spec:
         type: LoadBalancer
         ports:
           http:
+            port: 3000
     ingress:
       app:
         className: internal
