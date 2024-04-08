@@ -65,7 +65,7 @@ spec:
                   port: http
         tls:
           - hosts:
-              - *host   port: 3000
+              - *host
     persistence:
       config:
         enabled: true
