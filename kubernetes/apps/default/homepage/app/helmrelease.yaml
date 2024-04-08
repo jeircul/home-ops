@@ -18,8 +18,7 @@ spec:
     controllers:
       homepage:
         annotations:
-          secret.reloader.stakater.com/reload: &secret homepage-secret
-          configmap.reloader.stakater.com/reload: &configmap homepage-config
+          reloader.stakater.com/auto: "true"
         strategy: RollingUpdate
         containers:
           app:
